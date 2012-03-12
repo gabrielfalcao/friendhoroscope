@@ -8,9 +8,16 @@
       <div class="row">
 	<div class="span16">
 	  <h1>{{ name }}, born {{ born_past }}</h1>
-	  <h2>you are a {{ sign_name }}</h2>
+	  <h2>you are a {{ sign.name }}</h2>
 	</div>
       </div>
+      {% for sign in signs -%}
+      <div class="row">
+	<div class="span16">
+	  {{ sign.name }}
+	</div>
+      </div>
+      {%- endfor %}
     </div>
   </body>
 </html>

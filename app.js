@@ -101,12 +101,15 @@ app.get('/', controller(function(request, response){
 
     var sign = horoscope.for_user(user);
 
-    return response.render('index.html', {
+    var context = {
         name: user.name,
         email: user.email,
         born_past: sign.day.fromNow(),
-        sign_name: sign.name
-    });
+        sign: sign,
+        signs: horoscope.ordered_signs
+    };
+
+    return response.render('index.html', context);
 }));
 
 app.listen(process.env.PORT || 3000);
