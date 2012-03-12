@@ -49,7 +49,7 @@ var redis = require('redis').createClient();
 everyauth.facebook
     .appId(FACEBOOK_APP_ID)
     .appSecret(FACEBOOK_APP_SECRET)
-    .scope('friends_birthday,friends_about_me,friends_photos')
+    .scope('friends_birthday,friends_about_me,friends_photos,user_birthday,user_about_me,user_photos')
     .findOrCreateUser(function(session, access_token, accessTokExtra, user) {
         session.user = user;
         session.access_token = access_token;
