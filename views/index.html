@@ -61,15 +61,15 @@
       {% for sign in signs_and_friends -%}
       <div class="row">
 	<div class="span12">
+	  <h1>{{ sign.humanized }}</h1>
+	  {% for friend in sign.friends -%}
     	  <div class="alert alert-info" id="{{ sign.name }}">
-	    <h1>{{ sign.humanized }}</h1>
-	    {% for friend in sign.friends -%}
 	    <div class="friend" id="{{ friend.id }}">
-		<a href="#{{ friend.id }}" class="anchor"><h3>{{ friend.name }}{% if friend.born_at %} ({{ friend.born_at }}){% endif %}</h3></a>
-		<h4>({{ friend.user.birthday }})</h4>
+	      <img src="{{ friend.picture }}" class="" alt="{{ friend.name }}" />
+	      <a href="#{{ friend.id }}" class="anchor"><h3>{{ friend.name }} ({{ friend.user.birthday }}{% if friend.born_at %}, {{ friend.born_at }}{% endif %})</h3></a>
 	    </div>
-    	    {%- endfor %}
 	  </div>
+    	  {%- endfor %}
 	</div>
       </div>
       {%- endfor %}

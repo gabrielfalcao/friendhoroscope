@@ -7,7 +7,7 @@ var moment = require('moment');
 var _ = require('underscore')._;
 var everyauth = require('everyauth');
 var horoscope = require('./lib/horoscope');
-var fbapi = require('facebook-api');
+var graph = require('fbgraph');
 var RedisStore = require('connect-redis')(express);
 
 
@@ -47,6 +47,15 @@ var redis = require('redis').createClient();
     FACEBOOK_APP_ID = "262532087156566";
     FACEBOOK_APP_SECRET = "aa34e8714d3edd484cd0595302e1f531";
 }
+
+var options = {
+    timeout: 30000,
+    pool: { maxSockets:  Infinity },
+    headers: { connection:  "keep-alive" }
+};
+
+graph.setOptions(options);
+
 everyauth.facebook
     .moduleTimeout(9999999999)
     .appId(FACEBOOK_APP_ID)
@@ -100,6 +109,7 @@ function Friend(user){
     this.user = user;
     this.id = user.id;
     this.name = user.name;
+    this.picture = user.picture;
     this.sign = horoscope.for_user(user);
     this.born_at = "";
     this.year = null;
@@ -131,8 +141,6 @@ app.get('/', controller(function(request, response){
 
     var sign = horoscope.for_user(user);
 
-    var client = fbapi.user(access_token);
-
     var context = {
         name: user.name + "",
         born_past: sign.day.fromNow(),
@@ -145,7 +153,9 @@ app.get('/', controller(function(request, response){
 
     async.waterfall([
         function fetch_friends(callback){
-            client.me.friends(callback);
+            graph.get('me/friends', params, function(err, res){
+                return callback(err, res.data);
+            });
         },
         function fetch_birthdays(friends, callback){
             async.map(friends, function(friend, callback){
@@ -159,12 +169,23 @@ app.get('/', controller(function(request, response){
                             cached.cached = true;
                             return callback(null, cached);
                         } else {
-                            fbapi.raw('GET', ('/' + friend.id), params, callback);
+                            var path = '/' + friend.id;
+                            graph.get(path, params, callback);
                         }
+                    },
+                    function get_picture(user, callback){
+                        if (user.picture) {return callback(null, user);}
+                        graph.get(user.id, _.extend(params, {fields: 'picture'}), function(err, res){
+                            if (!err) {
+                                user.cached = false;
+                                user.picture = res.picture;
+                            }
+                            return callback(err, user);
+                        });
                     },
                     function persist (data, callback) {
                         var f = _.extend(friend, data);
-                        var raw = JSON.stringify(friend);
+                        var raw = JSON.stringify(f);
                         if (f.cached) {
                             return callback(null, new Friend(f));
                         } else {
