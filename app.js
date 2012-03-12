@@ -8,6 +8,7 @@ var _ = require('underscore')._;
 var everyauth = require('everyauth');
 var horoscope = require('./lib/horoscope');
 var fbapi = require('facebook-api');
+var RedisStore = require('connect-redis')(express);
 
 
 var app = express.createServer();
@@ -74,7 +75,8 @@ app.configure(function(){
 
     /* and session */
     app.use(express.session({
-        secret: 'fa8232889ff9323d7ed8368a410a4027'
+        secret: 'fa8232889ff9323d7ed8368a410a4027',
+        store: new RedisStore({ client: redis })
     }));
 
     /* using http://lesscss.org for stylesheets */
@@ -120,7 +122,7 @@ app.get('/', controller(function(request, response){
     var client = fbapi.user(access_token);
 
     var context = {
-        name: user.name,
+        name: user.name + "",
         born_past: sign.day.fromNow(),
         sign: sign,
         signs: horoscope.ordered_signs
@@ -143,7 +145,6 @@ app.get('/', controller(function(request, response){
                         if (user) {
                             var cached = JSON.parse(user);
                             cached.cached = true;
-                            console.log('found in cache: ', cached.name);
                             return callback(null, cached);
                         } else {
                             fbapi.raw('GET', ('/' + friend.id), params, callback);
@@ -166,10 +167,10 @@ app.get('/', controller(function(request, response){
         },
         function order(friends, callback){
             var signs_and_friends = _.map(horoscope.ordered_signs, function(sign){
-                return {
-                    name: sign.name,
-                    friends: _.filter(friends, function(f){return f.sign && (f.sign.name === sign.name);})
-                };
+                var newsign = _.clone(sign);
+                newsign.friends = _.filter(friends, function(f){
+                    return f.sign && (f.sign.name === sign.name);});
+                return newsign;
             });
             return callback(null, signs_and_friends, friends);
         },

@@ -2,21 +2,47 @@
   <head>
     <title>Horoscope signs</title>
     <link rel="stylesheet" href="/css/bootstrap.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
   </head>
-  <body>
-    <div class="container" style="overflow:auto">
-      <div class="row">
-	<div class="span16">
-	  <h1>{{ name }}, born {{ born_past }} ({{ sign.name }})</h1>
+  <body style="overflow:auto">
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+	<div class="container">
+	  <a class="brand" href="#">Friends and Horoscopes</a>
+
+	  <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#me">{{ name }}</a></li>
+              <li class="dropdown" id="friends-by-sign">
+		<a data-toggle="dropdown" class="dropdown-toggle" href="#friends-by-sign">Friends by sign <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+		  {% for sign in signs_and_friends -%}
+		  <li>
+		    <a href="#{{sign.name}}">
+		      {{ sign.humanized }}
+		    </a>
+		  </li>
+		  {%- endfor %}
+		</ul>
+              </li>
+            </ul>
 	</div>
       </div>
+    </div>
+    <div class="container">
       {% for sign in signs_and_friends -%}
-	  <h2>{{ sign.name }}</h2>
-	  {% for friend in sign.friends -%}
-	  <div class="alert-message block-message warning">
-	    <h3>{{ friend.name }}</h3><h4>({{ friend.user.birthday }})</h4>
+      <div class="row">
+	<div class="span12">
+    	  <div class="alert alert-info" id="{{ sign.name }}">
+	    <h1>{{ sign.humanized }}</h1>
+	    {% for friend in sign.friends -%}
+	    <h3>{{ friend.name }}</h3>
+	    <h4>({{ friend.user.birthday }})</h4>
+    	    {%- endfor %}
 	  </div>
-	  {%- endfor %}
+	</div>
+      </div>
       {%- endfor %}
     </div>
   </body>
