@@ -100,6 +100,17 @@ function Friend(user){
     this.id = user.id;
     this.name = user.name;
     this.sign = horoscope.for_user(user);
+    this.born_at = "";
+    this.year = null;
+    if (this.sign) {
+        this.year = parseInt(this.sign.day.year(), 10);
+        if (this.year == 1900) {
+            this.born_at = null;
+        } else {
+            this.born_at = this.sign.day.fromNow();
+        }
+
+    }
 }
 
 function controller (callback) {
@@ -182,6 +193,12 @@ app.get('/', controller(function(request, response){
     ], function(err, signs_and_friends, friends){
         context.signs_and_friends = signs_and_friends;
         context.friends = friends;
+        var pre_friends_json = {};
+        _.each(friends, function(f){
+            pre_friends_json[f.name] = f;
+        });
+        context.friends_json = JSON.stringify(pre_friends_json);
+        context.friend_names = JSON.stringify(_.map(friends, function(f){return f.name;}));
         return response.render('index.html', context);
     });
 

@@ -15,6 +15,19 @@
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
+    <script type="text/javascript">
+      window.users = {{ friends_json|raw }};
+      $(function(){
+          $("#find-friend").bind("submit", function(e){
+              var name = $("#search-friend-name").val();
+              var friend = window.users[name];
+              if (friend) {
+                  $("#" + friend.id).find(".anchor").click();
+              }
+              return e.preventDefault();
+          });
+      });
+    </script>
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -37,6 +50,9 @@
 		</ul>
               </li>
             </ul>
+	    <form id="find-friend" class="navbar-search pull-left">
+	      <input id="search-friend-name" type="text" placeholder="Type a friend's name" data-source="{{ friend_names }}" data-items="4" data-provide="typeahead" style="margin: 0 auto;" class="search-query" style="height: 28px">
+            </form>
 	  </div>
 	</div>
       </div>
@@ -48,8 +64,10 @@
     	  <div class="alert alert-info" id="{{ sign.name }}">
 	    <h1>{{ sign.humanized }}</h1>
 	    {% for friend in sign.friends -%}
-	    <h3>{{ friend.name }}</h3>
-	    <h4>({{ friend.user.birthday }})</h4>
+	    <div class="friend" id="{{ friend.id }}">
+		<a href="#{{ friend.id }}" class="anchor"><h3>{{ friend.name }}{% if friend.born_at %} ({{ friend.born_at }}){% endif %}</h3></a>
+		<h4>({{ friend.user.birthday }})</h4>
+	    </div>
     	    {%- endfor %}
 	  </div>
 	</div>
