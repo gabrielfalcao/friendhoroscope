@@ -8,23 +8,25 @@
   <body>
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-	<a class="brand" href="#">Friends and Horoscopes</a>
-	<div class="nav-collapse">
-          <ul class="nav">
-            <li class="active"><a href="#me">{{ name }}</a></li>
-            <li class="dropdown" id="friends-by-sign">
-	      <a data-toggle="dropdown" class="dropdown-toggle" href="#friends-by-sign">Friends by sign <b class="caret"></b></a>
-	      <ul class="dropdown-menu">
-		{% for sign in signs_and_friends -%}
-		<li>
-		  <a href="#{{sign.name}}">
-		    {{ sign.humanized }}
-		  </a>
-		</li>
-		{%- endfor %}
-	      </ul>
-            </li>
-          </ul>
+	<div class="container">
+	  <a class="brand" href="#">Friends and Horoscopes</a>
+	  <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#me">{{ name }}</a></li>
+              <li class="dropdown" id="friends-by-sign">
+		<a data-toggle="dropdown" class="dropdown-toggle" href="#friends-by-sign">Friends by sign <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+		  {% for sign in signs_and_friends -%}
+		  <li>
+		    <a href="#{{sign.name}}">
+		      {{ sign.humanized }}
+		    </a>
+		  </li>
+		  {%- endfor %}
+		</ul>
+              </li>
+            </ul>
+	  </div>
 	</div>
       </div>
     </div>
