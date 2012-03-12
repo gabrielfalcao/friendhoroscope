@@ -4,17 +4,21 @@
     <link rel="stylesheet" href="/css/bootstrap.css" type="text/css" media="screen" />
   </head>
   <body>
-    <div class="container">
+    <div class="container" style="overflow:auto">
       <div class="row">
 	<div class="span16">
-	  <h1>{{ name }}, born {{ born_past }}</h1>
-	  <h2>you are a {{ sign.name }}</h2>
+	  <h1>{{ name }}, born {{ born_past }} ({{ sign.name }})</h1>
 	</div>
       </div>
-      {% for sign in signs -%}
+      {% for sign in signs_and_friends -%}
       <div class="row">
 	<div class="span16">
-	  {{ sign.name }}
+	  <h2>{{ sign.name }}</h2>
+	  {% for friend in sign.friends -%}
+	  <div class="alert-message block-message warning">
+	    <h3>{{ friend.name }}</h3><h4>({{ friend.user.birthday }})</h4>
+	  </div>
+	  {%- endfor %}
 	</div>
       </div>
       {%- endfor %}
