@@ -48,6 +48,7 @@ var redis = require('redis').createClient();
     FACEBOOK_APP_SECRET = "aa34e8714d3edd484cd0595302e1f531";
 }
 everyauth.facebook
+    .moduleTimeout(9999999999)
     .appId(FACEBOOK_APP_ID)
     .appSecret(FACEBOOK_APP_SECRET)
     .scope('friends_birthday,friends_about_me,friends_photos,user_birthday,user_about_me,user_photos')
