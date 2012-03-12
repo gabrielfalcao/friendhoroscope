@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Hello World</title>
+    <title>Horoscope signs</title>
     <link rel="stylesheet" href="/css/bootstrap.css" type="text/css" media="screen" />
   </head>
   <body>
@@ -11,16 +11,12 @@
 	</div>
       </div>
       {% for sign in signs_and_friends -%}
-      <div class="row">
-	<div class="span16">
 	  <h2>{{ sign.name }}</h2>
 	  {% for friend in sign.friends -%}
 	  <div class="alert-message block-message warning">
 	    <h3>{{ friend.name }}</h3><h4>({{ friend.user.birthday }})</h4>
 	  </div>
 	  {%- endfor %}
-	</div>
-      </div>
       {%- endfor %}
     </div>
   </body>
