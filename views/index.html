@@ -5,20 +5,12 @@
   </head>
   <body>
     <div class="container">
-      <div class="span16">
-	<h1>Welcome to horoscope friends</h1>
-	<div class="row">
-	  <div class="alert-message block-message info">
-	    <a class="close" href="#">×</a>
-	    <p><strong>Heads up!</strong> This is an alert that needs your attention, but it’s not a huge priority just yet.</p>
-	    <div class="alert-actions">
-              <a class="btn small" href="#">Take this action</a> <a class="btn small" href="#">Or do this</a>
-	    </div>
-	  </div>
-	  <button class="btn large primary">refresh</button>
+      <div class="row">
+	<div class="span16">
+	  <h1>{{ name }}, born {{ born_past }}</h1>
+	  <h2>you are a {{ sign_name }}</h2>
 	</div>
       </div>
     </div>
   </body>
-
 </html>

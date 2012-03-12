@@ -2,7 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var swig = require('swig');
+var moment = require('moment');
 var _ = require('underscore')._;
+var everyauth = require('everyauth');
+var horoscope = require('./lib/horoscope');
 
 var app = express.createServer();
 
@@ -18,7 +21,7 @@ var CLIENT_PATH = LOCAL_FILE('client');
 
 swig.init({
     root: VIEW_PATH,
-    allowErrors: true
+    allowErrors: false
 });
 app.set('views', VIEW_PATH);
 app.register('.html', swig);
@@ -27,6 +30,32 @@ app.set('view cache', true);
 
 app.set('views', VIEW_PATH);
 app.set('view engine', 'html');
+
+if (process.env.PORT) {
+    FACEBOOK_APP_ID = "302858476405601";
+    FACEBOOK_APP_SECRET = "19c377a2f8635016bd5109d45d44a29a";
+} else {
+    FACEBOOK_APP_ID = "262532087156566";
+    FACEBOOK_APP_SECRET = "a7197b2c30dc961b3f83f180965911be";
+}
+everyauth.facebook
+    .appId(FACEBOOK_APP_ID)
+    .appSecret(FACEBOOK_APP_SECRET)
+    .scope('user_about_me,user_photos,friends_photos,email,publish_stream,user_birthday,friends_birthday,friends_about_me')
+    .findOrCreateUser(function(session, access_token, accessTokExtra, user) {
+        session.user = user;
+        session.access_token = access_token;
+        return user;
+    })
+    .logoutPath('/logout')
+    .handleLogout(function(request, response){
+        request.session.user = null;
+        request.logout();
+        response.redirect('/');
+    })
+    .redirectPath('/');
+
+everyauth.helpExpress(app);
 
 app.configure(function(){
 
@@ -42,7 +71,7 @@ app.configure(function(){
 
     /* using http://lesscss.org for stylesheets */
     app.use(express.compiler({src: ASSETS_PATH, enable: ['less'] }));
-
+    app.use(everyauth.middleware());
     app.use(app.router);
     app.use(express['static'](ASSETS_PATH));
     app.use(express['static'](CLIENT_PATH));
@@ -56,9 +85,28 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
-app.get('/', function(request, response){
+function controller (callback) {
+    return function(request, response){
+        var self = this;
+        if (!request.session.user) {
+            return response.redirect('/auth/facebook');
+        }
+        return callback.apply(self, arguments);
+    };
+}
+
+
+app.get('/', controller(function(request, response){
+    var user = request.session.user;
+
+    var sign = horoscope.for_user(user);
+
     return response.render('index.html', {
+        name: user.name,
+        email: user.email,
+        born_past: sign.day.fromNow(),
+        sign_name: sign.name
     });
-});
+}));
 
 app.listen(process.env.PORT || 3000);
