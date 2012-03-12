@@ -39,8 +39,8 @@ if (process.env.PORT) {
     var redis = require("redis").createClient(rtg.port, rtg.hostname);
     redis.auth(rtg.auth.split(":")[1]);
 
-    FACEBOOK_APP_ID = "302858476405601";
-    FACEBOOK_APP_SECRET = "19c377a2f8635016bd5109d45d44a29a";
+    FACEBOOK_APP_ID = "383114045041494";
+    FACEBOOK_APP_SECRET = "f72cc305ca430f7f0e9392b690ea45f8";
 } else {
 var redis = require('redis').createClient();
     FACEBOOK_APP_ID = "262532087156566";
