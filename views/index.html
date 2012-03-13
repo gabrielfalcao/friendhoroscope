@@ -45,7 +45,7 @@
 		  {% for sign in signs_and_friends -%}
 		  <li>
 		    <a href="#{{sign.name}}">
-		      {{ sign.humanized }}
+		      {{ sign.humanized }} ({{ sign.friends.length }})
 		    </a>
 		  </li>
 		  {%- endfor %}
@@ -63,7 +63,7 @@
       {% for sign in signs_and_friends -%}
       <div class="row">
 	<div class="span12">
-	  <h1>{{ sign.humanized }}</h1>
+	  <h1>{{ sign.humanized }} ({{ sign.friends.length }})</h1>
 	  {% for friend in sign.friends -%}
     	  <div class="alert alert-info friendbox" id="{{ sign.name }}">
 	    <div class="friend" id="{{ friend.id }}">
