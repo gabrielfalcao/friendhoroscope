@@ -217,7 +217,9 @@ app.get('/', controller(function(request, response){
         context.friends = friends;
         var pre_friends_json = {};
         _.each(friends, function(f){
-            pre_friends_json[f.name] = f;
+            if (f.sign) {
+                pre_friends_json[f.name] = f;
+            }
         });
         context.friends_json = JSON.stringify(pre_friends_json);
         context.friend_names = JSON.stringify(_.map(friends, function(f){return f.name;}));

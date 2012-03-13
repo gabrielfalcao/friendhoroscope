@@ -22,8 +22,10 @@
               var name = $("#search-friend-name").val();
               var friend = window.users[name];
               if (friend) {
-                  $("#" + friend.id).find(".anchor").click();
+                  location.href = (location.href.replace(/[#].*/, '') + "#" + friend.id);
               }
+              $(".friendbox").removeClass("alert-warning").addClass("alert-info");
+              $("#" + friend.id).removeClass("alert-info").addClass("alert-warning");
               return e.preventDefault();
           });
       });
@@ -63,7 +65,7 @@
 	<div class="span12">
 	  <h1>{{ sign.humanized }}</h1>
 	  {% for friend in sign.friends -%}
-    	  <div class="alert alert-info" id="{{ sign.name }}">
+    	  <div class="alert alert-info friendbox" id="{{ sign.name }}">
 	    <div class="friend" id="{{ friend.id }}">
 	      <img src="{{ friend.picture }}" class="" alt="{{ friend.name }}" />
 	      <a href="#{{ friend.id }}" class="anchor"><h3>{{ friend.name }} ({{ friend.user.birthday }}{% if friend.born_at %}, {{ friend.born_at }}{% endif %})</h3></a>
