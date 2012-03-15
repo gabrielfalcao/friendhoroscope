@@ -109,6 +109,7 @@ function Friend(user){
     this.user = user;
     this.id = user.id;
     this.name = user.name;
+    this.link = user.link;
     this.picture = user.picture;
     this.sign = horoscope.for_user(user);
     this.born_at = "";

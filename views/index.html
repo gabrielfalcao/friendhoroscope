@@ -68,7 +68,7 @@
     	  <div class="alert alert-info friendbox" id="{{ sign.name }}">
 	    <div class="friend" id="{{ friend.id }}">
 	      <img src="{{ friend.picture }}" class="" alt="{{ friend.name }}" />
-	      <a href="#{{ friend.id }}" class="anchor"><h3>{{ friend.name }} ({{ friend.user.birthday }}{% if friend.born_at %}, {{ friend.born_at }}{% endif %})</h3></a>
+	      <a href="{{ friend.link }}" class="anchor"><h3>{{ friend.name }} ({{ friend.user.birthday }}{% if friend.born_at %}, {{ friend.born_at }}{% endif %})</h3></a>
 	    </div>
 	  </div>
     	  {%- endfor %}
